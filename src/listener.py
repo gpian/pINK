@@ -72,8 +72,9 @@ class WriteImageThread(threading.Thread):
                 image.write(r.content)
 
 def main():
-    global TAG, T
+    global DOWNLOAD_DIR, TAG, T
     TAG = sys.argv[1]
+    DOWNLOAD_DIR = sys.argv[2]
     run(host='localhost', port=8515, reloader=True)
     T.cancel()
     T.join()

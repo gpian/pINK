@@ -20,7 +20,7 @@ def main():
     observer = Observer()
     event_handler = WatcherEventHandler()
 
-    observer.schedule(event_handler, '../downloads', recursive=False)
+    observer.schedule(event_handler, sys.argv[1], recursive=False)
     observer.start()
     try:
         while True:
