@@ -18,7 +18,6 @@ CONFIG = {
     'redirect_uri': 'http://localhost:8515/oauth_callback'
 }
 
-T = None
 api = None
 unauthenticated_api = client.InstagramAPI(**CONFIG)
 
@@ -56,28 +55,16 @@ def grab_media():
     for media in recent_media:
         url = media.images['standard_resolution'].url
         filename = ''.join([DOWNLOAD_DIR, '/', url.split('/')[-1]])
-        t = WriteImageThread(url, filename)
-        t.start()
-    T = threading.Timer(10, grab_media).start()
-
-class WriteImageThread(threading.Thread):
-    def __init__(self, url=None, filename=None):
-        self.url = url
-        self.filename = filename
-
-    def run(self):
-        r = requests.get(self.url)
-        if not os.path.isfile(self.filename):
-            with open(self.filename, "wb") as image:
+        r = requests.get(url)
+        if not os.path.isfile(filename):
+            with open(filename, "wb") as image:
                 image.write(r.content)
+    threading.Timer(10, grab_media).start()
 
 def main():
-    global DOWNLOAD_DIR, TAG, T
+    global TAG
     TAG = sys.argv[1]
-    DOWNLOAD_DIR = sys.argv[2]
     run(host='localhost', port=8515, reloader=True)
-    T.cancel()
-    T.join()
 
 if __name__ == '__main__':
     main()
