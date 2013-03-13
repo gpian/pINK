@@ -5,6 +5,7 @@ import logging
 import subprocess
 import sys
 import time
+import os
 
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
@@ -14,7 +15,19 @@ logging.basicConfig(level=logging.ERROR)
 class WatcherEventHandler(FileSystemEventHandler):
     def on_created(self, event):
         print event.src_path
-        subprocess.call(['lpr', '-P', 'CUPS_PDF', event.src_path])
+
+        cwd = os.getcwd()
+        project_root = os.path.dirname(cwd)
+        prints_path = '/'.join([project_root, 'prints'])
+        template_file = '/'.join([cwd, 'template.jpg'])
+        filename = os.path.basename(event.src_path)
+        output_file = '/'.join([prints_path, filename])
+
+        convert_parts = ['convert', '-size', '1200x1800', '-composite', template_file, event.src_path, '-geometry', '1180x1180+10+300', '-depth', '8', output_file]
+        subprocess.call(convert_parts)
+
+        lpr_parts = ['lpr', '-o', 'media=Custom.4x6in', output_file]
+        subprocess.call(lpr_parts)
 
 def main():
     observer = Observer()

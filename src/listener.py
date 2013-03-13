@@ -51,7 +51,6 @@ def grab_media():
     global DOWNLOAD_DIR, TAG, T
 
     recent_media, next = api.tag_recent_media(10, '0', TAG)
-    print next
     for media in recent_media:
         url = media.images['standard_resolution'].url
         filename = ''.join([DOWNLOAD_DIR, '/', url.split('/')[-1]])
@@ -59,7 +58,7 @@ def grab_media():
         if not os.path.isfile(filename):
             with open(filename, "wb") as image:
                 image.write(r.content)
-    threading.Timer(10, grab_media).start()
+    threading.Timer(30, grab_media).start()
 
 def main():
     global TAG
