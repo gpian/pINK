@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import argparse
 import logging
+import os
 import subprocess
 import sys
 import time
-import os
 
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
@@ -29,19 +30,25 @@ class WatcherEventHandler(FileSystemEventHandler):
         lpr_parts = ['lpr', '-o', 'media=Custom.4x6in', output_file]
         subprocess.call(lpr_parts)
 
-def main():
+def main(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('directory', help='Directory to watch')
+    args = parser.parse_args()
+
     observer = Observer()
     event_handler = WatcherEventHandler()
 
-    observer.schedule(event_handler, '../downloads', recursive=False)
+    observer.schedule(event_handler, args.directory, recursive=False)
     observer.start()
+
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
+
     return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main(sys.argv))
