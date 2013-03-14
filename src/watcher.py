@@ -33,12 +33,10 @@ class WatcherEventHandler(FileSystemEventHandler):
         output_file = '/'.join([prints_path, filename])
 
         convert_parts = ['convert', '-size', '1200x1800', '-composite', template_file, image_path, '-geometry', '1180x1180+10+300', '-depth', '8', output_file]
-        print convert_parts
-        #subprocess.call(convert_parts)
+        subprocess.call(convert_parts)
 
         lpr_parts = ['lpr', '-o', 'media=%s' % self.media_size, output_file]
-        print lpr_parts
-        #subprocess.call(lpr_parts)
+        subprocess.call(lpr_parts)
 
 def main(args):
     media_sizes = ['A4', 'Letter', 'Legal', 'Custom.4x6in', 'Custom.2x3in']
