@@ -9,34 +9,33 @@ import time
 import threading
 
 from instagram import client, subscriptions
+from SECRET import CONFIG
 
-CONFIG = {
-    'client_id': 'ce3ac3be70ee4089bc7317b2959a043c',
-    'client_secret': '8c17ab619c624ed0aa5e1c5dd691cb2a',
-    'redirect_uri': 'http://localhost:8515/oauth_callback'
-}
+src_path = os.getcwd()
+root_path = os.path.dirname(src_path)
+downloads_path = '/'.join([root_path, 'downloads'])
 
-def grab_media(api, tag, download_dir):
+def grab_media(api, tag):
     recent_media, next = api.tag_recent_media(10, '0', tag)
     for media in recent_media:
         url = media.images['standard_resolution'].url
         print url
 
-        filename = ''.join([download_dir, '/', url.split('/')[-1]])
+        filename = ''.join([downloads_path, '/', url.split('/')[-1]])
         r = requests.get(url)
         if not os.path.isfile(filename):
             with open(filename, "wb") as image:
                 image.write(r.content)
-    threading.Timer(30, grab_media, [api, tag, download_dir]).start()
+    threading.Timer(30, grab_media, [api, tag]).start()
 
 def main(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument('hashtag', help='Instagram hashtag')
-    parser.add_argument('directory', help='Output directory')
     args = parser.parse_args()
 
     unauthenticated_api = client.InstagramAPI(**CONFIG)
-    grab_media(unauthenticated_api, args.hashtag, args.directory)
+
+    grab_media(unauthenticated_api, args.hashtag)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
