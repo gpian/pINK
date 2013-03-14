@@ -35,6 +35,8 @@ nosetests.xml
 .pydevproject
 
 # 
-downloads
-prints
+downloads/*
+originals/*
+prints/*
+
 SECRET.*

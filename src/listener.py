@@ -10,23 +10,32 @@ import threading
 
 from instagram import client, subscriptions
 from SECRET import CONFIG
+from pINK import Paths
 
-src_path = os.getcwd()
-root_path = os.path.dirname(src_path)
-downloads_path = '/'.join([root_path, 'downloads'])
+counter = 0
+timer = None
+
+paths = Paths(os.getcwd())
 
 def grab_media(api, tag):
-    recent_media, next = api.tag_recent_media(10, '0', tag)
-    for media in recent_media:
-        url = media.images['standard_resolution'].url
-        print url
+    global counter
 
-        filename = ''.join([downloads_path, '/', url.split('/')[-1]])
-        r = requests.get(url)
-        if not os.path.isfile(filename):
-            with open(filename, "wb") as image:
-                image.write(r.content)
-    threading.Timer(30, grab_media, [api, tag]).start()
+    generator = api.tag_recent_media(10, '0', tag, as_generator=True)
+    for page, next_url in generator:
+        for media in page:
+            counter = counter + 1
+            url = media.get_standard_resolution_url()
+            print "[%d] %s" % (counter, url)
+
+            filename = ''.join([paths.downloads, '/', url.split('/')[-1]])
+            r = requests.get(url)
+            if not os.path.isfile(filename):
+                with open(filename, "wb") as image:
+                    image.write(r.content)
+
+    global timer
+    timer = threading.Timer(30, grab_media, [api, tag])
+    timer.start()
 
 def main(argv):
     parser = argparse.ArgumentParser()
@@ -34,8 +43,17 @@ def main(argv):
     args = parser.parse_args()
 
     unauthenticated_api = client.InstagramAPI(**CONFIG)
-
     grab_media(unauthenticated_api, args.hashtag)
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        if timer is not None:
+            timer.cancel()
+    if timer is not None:
+        timer.join()
+    return 0
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
