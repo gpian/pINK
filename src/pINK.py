@@ -11,3 +11,4 @@ class Paths:
         self.originals  = '/'.join([self.root, 'originals'])
         self.prints     = '/'.join([self.root, 'prints'])
         self.templates  = '/'.join([self.root, 'templates'])
+        self.pictures   = '/'.join([self.root, 'pictures'])

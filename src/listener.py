@@ -33,6 +33,14 @@ def grab_media(api, tag):
                 with open(filename, "wb") as image:
                     image.write(r.content)
 
+            url = media.user.profile_picture
+            filename = ''.join([paths.pictures, '/', url.split('/')[-1]])
+            r = requests.get(url)
+            if not os.path.isfile(filename):
+                with open(filename, "wb") as image:
+                    image.write(r.content)
+
+
     global timer
     timer = threading.Timer(30, grab_media, [api, tag])
     timer.start()
