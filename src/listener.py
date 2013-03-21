@@ -30,41 +30,42 @@ class Listener:
         self.timer.join()
 
     def grab_media(self):
-        #generator = self.api.tag_recent_media(10, self.last_media_id, self.hashtag, as_generator=True)
-        generator = self.api.tag_recent_media(10, '0', self.hashtag, as_generator=True)
+        generator = self.api.tag_recent_media(10, self.last_media_id, self.hashtag, as_generator=True)
+        #generator = self.api.tag_recent_media(10, '0', self.hashtag, as_generator=True)
         for page, next_url in generator:
             for media in page:
 
                 url = media.get_standard_resolution_url()
                 filename = '/'.join([self.paths.downloads, url.split('/')[-1]])
 
-                if True:#media.created_time > self.started_time:
+                if media.created_time > self.started_time:
                     self.counter = self.counter + 1
 
                     print "[+] %s %s" % (media.created_time, media.id)
 
-                    # r = requests.get(url)
-                    # if not os.path.isfile(filename):
-                    #     with open(filename, "wb") as image:
-                    #         image.write(r.content)
+                    r = requests.get(url)
+                    if not os.path.isfile(filename):
+                        with open(filename, "wb") as image:
+                            image.write(r.content)
 
-                    # url = media.user.profile_picture
-                    # filename = ''.join([paths.pictures, '/', url.split('/')[-1]])
-                    # r = requests.get(url)
-                    # if not os.path.isfile(filename):
-                    #     with open(filename, "wb") as image:
-                    #         image.write(r.content)
-
-                    try:
-                        if self.last_media_ts < media.created_time:
-                            self.last_media_ts = media.created_time
-                            self.last_media_id = media.id
-                    except AttributeError:
-                        self.last_media_ts = media.created_time
-                        self.last_media_id = media.id
-
+                    url = media.user.profile_picture
+                    filename = ''.join([self.paths.pictures, '/', url.split('/')[-1]])
+                    r = requests.get(url)
+                    if not os.path.isfile(filename):
+                        with open(filename, "wb") as image:
+                            image.write(r.content)
                 else:
                     print "[-] %s %s" % (media.created_time, media.id)
+
+                try:
+                    if self.last_media_ts < media.created_time:
+                        self.last_media_ts = media.created_time
+                        self.last_media_id = media.id
+                        print "[last]", self.last_media_id, self.last_media_ts
+                except AttributeError:
+                    self.last_media_ts = media.created_time
+                    self.last_media_id = media.id
+                    print "[last]", self.last_media_id, self.last_media_ts
 
         self.timer = threading.Timer(30, self.grab_media)
         self.timer.start()
