@@ -37,7 +37,7 @@ nosetests.xml
 # 
 downloads/*
 originals/*
+#pictures/*
 prints/*
-pictures/*
 
 SECRET.*
