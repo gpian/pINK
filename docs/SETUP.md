@@ -1,39 +1,38 @@
-* Setup info for pINK Raspberry Pi system *
+# Setup info for pINK Raspberry Pi system #
 
-* Directory structure *
+## Directory structure ##
 
 development
 |-- python
     |-- projects
     |-- virtualenv
 
-* Packages to install *
+## Packages to install ##
 
-# git
+### git ###
 sudo apt-get install git
 
-# python-pip
+### python-pip ###
 sudo apt-get install python-pip
 sudo pip install pip --upgrade
 
-# virtualenv
+### virtualenv ###
 sudo pip install virtualenv
 
-# In development/python/virtualenv
+### In development/python/virtualenv ###
 virtualenv pINK
 source pINK/bin/activate
 
-# install python packages
+### install python packages ###
 pip install requests
 pip install python-instagram
 pip install watchdog
 
-# cups-pdf
+### cups-pdf ###
 sudo apt-get install cups-pdf
 
-* Bluetooth setup *
+## Bluetooth setup ##
 
 
-
-* Wifi setup *
+## Wifi setup ##
 
