@@ -2,10 +2,10 @@
 
 ## Directory structure ##
 
-development
-|-- python
-    |-- projects
-    |-- virtualenv
+* development
+  * python
+      * projects
+      * virtualenv
 
 ## Packages to install ##
 
@@ -13,19 +13,19 @@ development
 sudo apt-get install git
 
 ### python-pip ###
-sudo apt-get install python-pip
+sudo apt-get install python-pip  
 sudo pip install pip --upgrade
 
 ### virtualenv ###
 sudo pip install virtualenv
 
 ### In development/python/virtualenv ###
-virtualenv pINK
+virtualenv pINK  
 source pINK/bin/activate
 
 ### install python packages ###
-pip install requests
-pip install python-instagram
+pip install requests  
+pip install python-instagram  
 pip install watchdog
 
 ### cups-pdf ###
