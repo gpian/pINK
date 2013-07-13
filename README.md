@@ -4,8 +4,8 @@ Print 'polaroid' style Instagram posts by hashtag. Intended to run on the Raspbe
 
 ## Installation notes ##
 
-+ `virtualenv [your/env]/pINK`
-+ `source [/your/env]/pINK/bin/activate`
++ `virtualenv /your/env/pINK`
++ `source /your/env/pINK/bin/activate`
 + `pip install requests`
 + `pip install python-instagram`
 + `pip install watchdog`
