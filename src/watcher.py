@@ -40,9 +40,6 @@ class WatcherEventHandler(FileSystemEventHandler):
         lpr_parts = ['lpr', '-o', 'media=%s' % self.media_size, output_file]
         subprocess.call(lpr_parts)
 
-        mv_parts = ['mv', image_file, paths.originals]
-        subprocess.call(mv_parts)
-
 def main(args):
     media_sizes = ['A4', 'Letter', 'Legal', 'Custom.4x6in', 'Custom.2x3in']
 

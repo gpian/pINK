@@ -18,6 +18,7 @@ http://www.youtube.com/watch?v=zaz_IPAp5tw
 
 ### Related Links ###
 
++ [Instagram API](http://instagram.com/developer/api-console/ "Instagram API")
 + [Raspberry Pi and Polaroid PoGo Bluetooth Printer](http://opalfruits.net/blog/index.php/2013/02/14/raspberry-pi-and-polaroid-pogo-bluetooth-printer-part-1 "Raspberry Pi and Polaroid PoGo Bluetooth Printer")
 + [Free Instagram Printer](http://leemart.in/instaprinter "Free Instagram Printer")
 
