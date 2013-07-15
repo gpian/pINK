@@ -4,7 +4,6 @@
 import argparse
 import logging
 import os
-import subprocess
 import sys
 import threading
 import time
@@ -14,7 +13,7 @@ from watchdog.observers import Observer
 
 logging.basicConfig(level=logging.ERROR)
 
-class Watcher(FileSystemEventHandler):
+class Egress(FileSystemEventHandler):
     def __init__(self, watch_dir):
         self.watch_dir = watch_dir
 
@@ -47,14 +46,14 @@ def main(args):
     parser.add_argument('--dir', default='.', help='directory to watch')
     args = parser.parse_args()
 
-    watcher = Watcher(args.dir)
-    watcher.start()
+    outlet = Egress(args.dir)
+    outlet.start()
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        watcher.stop()
+        outlet.stop()
 
     return 0
 

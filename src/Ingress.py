@@ -7,21 +7,19 @@ import sys
 import threading
 import time
 
-class Listener(object):
+class Ingress(object):
     def __init__(self, rate):
         self.rate = rate
         self.is_running = False
 
     def start(self):
         if self.is_running == False:
-            self.is_running = True
             self.started_time = dt.datetime.utcnow()
-
             self.__start()
+            self.is_running = True
 
     def __start(self):
         self.grab()
-
         self.__timer = threading.Timer(self.rate, self.__start)
         self.__timer.start()
 
@@ -30,21 +28,20 @@ class Listener(object):
         if self.is_running == True:
             self.__timer.cancel()
             self.__timer.join()
-
             self.is_running = False
 
     def grab(self):
         return 0
 
 def main(argv):
-    listener = Listener(30)
-    listener.start()
+    innlet = Ingress(30)
+    innlet.start()
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        listener.stop()
+        innlet.stop()
 
     return 0
 

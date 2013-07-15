@@ -7,15 +7,15 @@ import sys
 import time
 
 from pINK import Paths
-from Watcher import Watcher
+from Egress import Egress
 
 paths = Paths(os.getcwd())
 
-class LprWatcher(Watcher):
+class LprEgress(Egress):
     def __init__(self, watch_dir, template_filename, media_size):
-        print "LprWatcher on %s with %s at %s" % (watch_dir, template_filename, media_size)
+        print "LprEgress on %s with %s at %s" % (watch_dir, template_filename, media_size)
 
-        super(LprWatcher, self).__init__(watch_dir)
+        super(LprEgress, self).__init__(watch_dir)
 
         self.template_filename = template_filename
         self.media_size = media_size
@@ -45,14 +45,14 @@ def main(args):
     parser.add_argument('--template', default='template.jpg', help='template filename (default template.jpg)')
     args = parser.parse_args()
 
-    watcher = LprWatcher(args.dir, args.template, args.size)
-    watcher.start()
+    outlet = LprEgress(args.dir, args.template, args.size)
+    outlet.start()
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        watcher.stop()
+        outlet.stop()
 
     return 0
 
