@@ -7,11 +7,10 @@ import requests
 import sys
 import time
 
-from Listener import Listener
-
 from instagram import client, subscriptions
-from SECRET import CONFIG
+from Listener import Listener
 from pINK import Paths
+from SECRET import CONFIG
 
 class HashtagListener(Listener):
     def __init__(self, api, hashtag, rate):

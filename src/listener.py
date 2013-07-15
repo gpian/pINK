@@ -4,8 +4,8 @@
 import argparse
 import datetime as dt
 import sys
-import time
 import threading
+import time
 
 class Listener(object):
     def __init__(self, rate):
