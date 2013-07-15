@@ -13,6 +13,8 @@ Print 'polaroid' style Instagram posts by hashtag. Intended to run on the Raspbe
 
 + [Register Instagram client](http://instagram.com/developer/clients/register "Register Instagram client")
 + Rename \_SECRET.py to SECRET.py and fill in client\_id, client\_secret, redirect\_uri
++ Run `python PogoIngress.py`
++ Run `python InstagramHashtagIngress.py [hashtag]`
 
 ## Demo ##
 
