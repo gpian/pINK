@@ -2,36 +2,29 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import datetime as dt
 import os
 import requests
 import sys
 import time
-import threading
 
 from instagram import client, subscriptions
-from SECRET import CONFIG
+from Ingress import Ingress
 from pINK import Paths
+from SECRET import CONFIG
 
-class Listener:
-    def __init__(self, api, hashtag):
+class InstagramHashtagIngress(Ingress):
+    def __init__(self, api, hashtag, rate):
+        super(InstagramHashtagIngress, self).__init__(rate)
+
         self.api = api
         self.hashtag = hashtag
         self.counter = 0
         self.paths = Paths(os.getcwd())
         self.last_media_id = '0'
+        self.last_media_ts = None
 
-    def start(self):
-        self.started_time = dt.datetime.utcnow()
-        self.grab_media()
-
-    def stop(self):
-        self.timer.cancel()
-        self.timer.join()
-
-    def grab_media(self):
+    def grab(self):
         generator = self.api.tag_recent_media(10, self.last_media_id, self.hashtag, as_generator=True)
-        #generator = self.api.tag_recent_media(10, '0', self.hashtag, as_generator=True)
         for page, next_url in generator:
             for media in page:
 
@@ -41,12 +34,17 @@ class Listener:
                 if media.created_time > self.started_time:
                     self.counter = self.counter + 1
 
-                    print "[+] %s %s" % (media.created_time, media.id)
-
                     r = requests.get(url)
                     if not os.path.isfile(filename):
                         with open(filename, "wb") as image:
                             image.write(r.content)
+
+                            if self.last_media_ts == None or self.last_media_ts < media.created_time:
+                                self.last_media_ts = media.created_time
+                                self.last_media_id = media.id
+                                print "[*] %s %s %s" % (media.created_time, filename, media.id)
+                            else:
+                                print "[+] %s %s %s" % (media.created_time, filename, media.id)
 
                     url = media.user.profile_picture
                     filename = ''.join([self.paths.pictures, '/', url.split('/')[-1]])
@@ -54,35 +52,20 @@ class Listener:
                     if not os.path.isfile(filename):
                         with open(filename, "wb") as image:
                             image.write(r.content)
-                else:
-                    print "[-] %s %s" % (media.created_time, media.id)
-
-                try:
-                    if self.last_media_ts < media.created_time:
-                        self.last_media_ts = media.created_time
-                        self.last_media_id = media.id
-                        print "[last]", self.last_media_id, self.last_media_ts
-                except AttributeError:
-                    self.last_media_ts = media.created_time
-                    self.last_media_id = media.id
-                    print "[last]", self.last_media_id, self.last_media_ts
-
-        self.timer = threading.Timer(30, self.grab_media)
-        self.timer.start()
 
 def main(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument('hashtag', help='Instagram hashtag')
     args = parser.parse_args()
 
-    listener = Listener(client.InstagramAPI(**CONFIG), args.hashtag)
-    listener.start()
+    innlet = InstagramHashtagIngress(client.InstagramAPI(**CONFIG), args.hashtag, 30)
+    innlet.start()
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        listener.stop()
+        innlet.stop()
 
     return 0
 

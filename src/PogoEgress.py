@@ -2,34 +2,30 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import logging
 import os
-import subprocess
 import sys
 import time
-import threading
 
 from pINK import Paths
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
-
-logging.basicConfig(level=logging.ERROR)
+from Egress import Egress
 
 paths = Paths(os.getcwd())
 
-class WatcherEventHandler(FileSystemEventHandler):
-    def __init__(self, template_filename, media_size):
+class LprEgress(Egress):
+    def __init__(self, watch_dir, template_filename, media_size):
+        print "LprEgress on %s with %s at %s" % (watch_dir, template_filename, media_size)
+
+        super(LprEgress, self).__init__(watch_dir)
+
         self.template_filename = template_filename
         self.media_size = media_size
-        self.counter = 0
 
-    def on_created(self, event):
-        self.counter = self.counter + 1
-        print "[%d] %s" % (self.counter, event.src_path)
+    def process(self, watched_file):
+        print "[%d] %s" % (self.counter, watched_file)
 
-        threading.Thread(target=self.process, args=(event.src_path,)).start()
+        image_file = watched_file
+        print "Lpr process %s" % (image_file)
 
-    def process(self, image_file):
         template_file = '/'.join([paths.templates, self.template_filename])
         filename = os.path.basename(image_file)
         output_file = '/'.join([paths.prints, filename])
@@ -40,9 +36,6 @@ class WatcherEventHandler(FileSystemEventHandler):
         lpr_parts = ['lpr', '-o', 'media=%s' % self.media_size, output_file]
         subprocess.call(lpr_parts)
 
-        mv_parts = ['mv', image_file, paths.originals]
-        subprocess.call(mv_parts)
-
 def main(args):
     media_sizes = ['A4', 'Letter', 'Legal', 'Custom.4x6in', 'Custom.2x3in']
 
@@ -52,17 +45,14 @@ def main(args):
     parser.add_argument('--template', default='template.jpg', help='template filename (default template.jpg)')
     args = parser.parse_args()
 
-    observer = Observer()
-    event_handler = WatcherEventHandler(args.template, args.size)
-    observer.schedule(event_handler, args.dir, recursive=False)
-    observer.start()
+    outlet = LprEgress(args.dir, args.template, args.size)
+    outlet.start()
 
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
+        outlet.stop()
 
     return 0
 
