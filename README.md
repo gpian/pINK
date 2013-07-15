@@ -9,7 +9,7 @@ Print 'polaroid' style Instagram posts by hashtag. Intended to run on the Raspbe
 + `pip install requests`
 + `pip install python-instagram`
 + `pip install watchdog`
-+ `pip install pyobjc` *(takes a while)*
++ `pip install pyobjc`
 
 + [Register Instagram client](http://instagram.com/developer/clients/register "Register Instagram client")
 + Rename \_SECRET.py to SECRET.py and fill in client\_id, client\_secret, redirect\_uri
@@ -35,6 +35,7 @@ http://www.youtube.com/watch?v=zaz_IPAp5tw
 + [Cheapstaprint](http://www.welcometocreature.com/blog/2012/11/20/cheapstaprint.html "Cheapstaprint")
 
 ## Bluetooth ##
++ [OS X Bluetooth Framework Reference](https://developer.apple.com/library/mac/#documentation/devicedrivers/Reference/IOBluetooth/_index.html)
 + [Bluetooth on OS X](https://developer.apple.com/library/mac/#documentation/DeviceDrivers/Conceptual/Bluetooth/BT_Bluetooth_On_MOSX/BT_Bluetooth_On_MOSX.html "Bluetooth on OS X")
 + [PyObjC](http://pythonhosted.org/pyobjc/install.html "PyObjC")
 + [Elementary Bluetooth using PyObjC](http://pseudofish.com/elementary-bluetooth-using-pyobjc.html "Elementary Bluetooth using PyObjC")
